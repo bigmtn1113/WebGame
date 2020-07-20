@@ -14,8 +14,6 @@ var winningNum = shuffle.splice(0, 6).sort(function(a, b) {
 
 var bonusNum = shuffle[shuffle.length - 1];
 
-console.log(winningNum, bonusNum);
-
 var winningNumView = document.querySelector('#winningNumView');	// document.getElementById('winningNumView')
 
 function drawBall(num, view) {
@@ -43,6 +41,24 @@ function drawBall(num, view) {
 	view.append(ball);
 }
 
+for (var i = 0; i < winningNum.length; ++i) {
+	(function closure(j) {
+		setTimeout(function callback() {
+			drawBall(winningNum[j], winningNumView);
+		}, (j + 1) * 1000);
+	})(i);
+	
+	/* 동일 코드
+	function closure(j) {
+		setTimeout(function callback() {
+			drawBall(winningNum[j], winningNumView);
+		}, (j + 1) * 1000);
+	};
+	closure(j);
+	*/
+}
+
+/*
 setTimeout(function callback() {	// 비동기 콜백 함수. 1초 뒤 실행
 	drawBall(winningNum[0], winningNumView);
 }, 1000);
@@ -61,6 +77,7 @@ setTimeout(function callback() {
 setTimeout(function callback() {
 	drawBall(winningNum[5], winningNumView);
 }, 6000);
+*/
 
 var bonusNumView = document.querySelector('.bonusNumView');	// document.getElementsByClassName('bonusNumView')[0]. class는 여러개가 있을 수 있으므로 인덱스를 통해 접근.
 setTimeout(function callback() {
