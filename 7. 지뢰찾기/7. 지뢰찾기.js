@@ -3,6 +3,7 @@ var tbody = document.querySelector('#table tbody');
 document.querySelector('#exec').addEventListener('click', function() {
 	tbody.innerHTML = '';	// tbody 내부 태그들 초기화
 	document.querySelector('#result').textContent = '';
+	document.querySelector('#timer').textContent = '';
 	var hor = parseInt(document.querySelector('#hor').value);
 	var ver = parseInt(document.querySelector('#ver').value);
 	var mine = parseInt(document.querySelector('#mine').value);
@@ -27,6 +28,10 @@ document.querySelector('#exec').addEventListener('click', function() {
 		document.querySelector('#mine').focus();
 		return;
 	}
+	
+	
+	var startTime = new Date();	// performance.now()는 소수점이 많음. 정밀한 작업할 때 사용. 사용법은 Date와 동일.
+	var endTime;
 	
 	var dataset = [];
 	var stopFlag = false;
@@ -79,9 +84,11 @@ document.querySelector('#exec').addEventListener('click', function() {
 				e.target.classList.add('opened');	// td에 opened가 추가. remove는 삭제
 				
 				if (dataset[row][col] === 'X') {
+					endTime = new Date();
+					stopFlag = true;
 					e.target.textContent = '펑';
 					document.querySelector('#result').textContent = '실패..';
-					stopFlag = true;
+					document.querySelector('#timer').textContent = (endTime - startTime) / 1000 + '초';
 				} else {	// 빈칸 클릭 시 주변 지뢰 개수 파악
 					dataset[row][col] = 1;	// open한 칸들 표시
 					openedCell += 1;
@@ -130,8 +137,10 @@ document.querySelector('#exec').addEventListener('click', function() {
 					}
 					
 					if (openedCell === hor * ver - mine) {
+						endTime = new Date();
 						stopFlag = true;
 						document.querySelector('#result').textContent = '성공!!';
+						document.querySelector('#timer').textContent = (endTime - startTime) / 1000 + '초';
 					}
 				}
 			});
@@ -147,6 +156,9 @@ document.querySelector('#exec').addEventListener('click', function() {
 	var shuffle = [];
 	while (numList.length > hor * ver - mine)
 		shuffle.push(numList.splice(Math.floor(Math.random() * numList.length), 1)[0]);
+	
+	document.querySelector('#timer').style.width = 25 * hor + 'px';
+	document.querySelector('#result').style.width = 25 * hor + 'px';
 	
 	// mine 심기
 	for (var i = 0; i < shuffle.length; ++i) {
