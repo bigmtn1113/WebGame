@@ -1,0 +1,47 @@
+<!DOCTYPE>
+<html>
+<head>
+	<meta charset="utf-8"/>
+	<title>카드짝맞추기</title>
+	<style>
+		.card {
+			display: inline-block;
+			margin-right: 20px;
+			margin-bottom: 20px;
+			width: 70px;
+			height: 100px;
+			border: 1px solid black;
+			perspective: 140px;
+		}
+		.card-inner {
+			position: relative;
+			width: 100%;
+			height: 100%;
+			text-align: center;
+			transition: transform 0.8s;
+			transform-style: preserve-3d;
+		}
+		.card.flipped .card-inner{
+			transform: rotateY(180deg);
+		}
+		.card-front, .card-back {
+			position: absolute;
+			width: 100%;
+			height: 100%;
+			backface-visibility: hidden;
+		}
+		.card-front {
+			background-color: dodgerblue;
+			color: black;
+		}
+		.card-back {
+			background-color: #bbb;
+			color: white;
+			transform: rotateY(180deg);
+		}
+	</style>
+</head>
+<body>
+	<script src="9. 카드짝맞추기.js"></script>
+</body>
+</html>
