@@ -2,6 +2,8 @@ var width = 4;
 var height = 3;
 var cardBackColorList = ['red', 'red', 'orange', 'orange', 'violet', 'violet', 'green', 'green', 'navy', 'navy', 'indigo', 'indigo'];
 var cardBackColor = [];
+var clickedCard = [];
+var answerCard = [];
 
 while (cardBackColorList.length)
 	cardBackColor.push(cardBackColorList.splice(Math.floor(Math.random() * cardBackColorList.length), 1));
@@ -24,8 +26,27 @@ function setCard(width, height) {
 		card.append(cardInner);
 		(function(c) {
 			card.addEventListener('click', function() {
-				if (clickFlag)
+				if (clickFlag && !answerCard.includes(c)) {
 					c.classList.toggle('flipped');
+					clickedCard.push(c);
+					
+					if (clickedCard.length === 2) {
+						if (clickedCard[0].querySelector('.card-back').style.backgroundColor ===
+							clickedCard[1].querySelector('.card-back').style.backgroundColor) {
+							answerCard.push(clickedCard[0]);
+							answerCard.push(clickedCard[1]);
+							clickedCard = [];
+						} else {
+							clickFlag = false;
+							setTimeout(function() {
+								clickedCard[0].classList.remove('flipped');
+								clickedCard[1].classList.remove('flipped');
+								clickedCard = [];
+								clickFlag = true;
+							}, 1000);
+						}
+					}
+				}
 			});
 		})(card);
 		document.body.append(card);
