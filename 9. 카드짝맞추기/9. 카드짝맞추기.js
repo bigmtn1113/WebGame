@@ -1,12 +1,19 @@
 var width = 4;
 var height = 3;
-var cardBackColorList = ['red', 'red', 'orange', 'orange', 'violet', 'violet', 'green', 'green', 'navy', 'navy', 'indigo', 'indigo'];
-var cardBackColor = [];
+var colorList = ['red', 'red', 'orange', 'orange', 'violet', 'violet', 'green', 'green', 'navy', 'navy', 'indigo', 'indigo'];
+var cardBackColorList = [];
+var cardBackColor;
 var clickedCard = [];
 var answerCard = [];
+var startTime;
 
-while (cardBackColorList.length)
-	cardBackColor.push(cardBackColorList.splice(Math.floor(Math.random() * cardBackColorList.length), 1));
+function suffle() {
+	cardBackColorList = colorList.slice();	// 참조관계 끊기
+	cardBackColor = [];
+	
+	while(cardBackColorList.length)
+		cardBackColor.push(cardBackColorList.splice(Math.floor(Math.random() * cardBackColorList.length), 1));
+}
 
 function setCard(width, height) {
 	var clickFlag = false;
@@ -30,13 +37,24 @@ function setCard(width, height) {
 					c.classList.toggle('flipped');
 					clickedCard.push(c);
 					
-					if (clickedCard.length === 2) {
-						if (clickedCard[0].querySelector('.card-back').style.backgroundColor ===
-							clickedCard[1].querySelector('.card-back').style.backgroundColor) {
+					if (clickedCard.length === 2) {	// 카드 두개 클릭했을 경우
+						if ((clickedCard[0] !== clickedCard[1]) &&
+							(clickedCard[0].querySelector('.card-back').style.backgroundColor ===
+							clickedCard[1].querySelector('.card-back').style.backgroundColor)) {	// 서로 다른 두 카드의 색이 같을 경우
 							answerCard.push(clickedCard[0]);
 							answerCard.push(clickedCard[1]);
 							clickedCard = [];
-						} else {
+							
+							if (answerCard.length === width * height) {	// 게임을 클리어했을 경우
+								var endTime = new Date();
+								alert((endTime - startTime)/1000 + '초 걸렸습니다');
+								document.querySelector('#wrapper').innerHTML = '';
+								answerCard = [];
+								startTime = null;
+								suffle();
+								setCard(width, height);
+							}
+						} else {	// 서로 다른 두 카드의 색이 다른 경우
 							clickFlag = false;
 							setTimeout(function() {
 								clickedCard[0].classList.remove('flipped');
@@ -49,7 +67,8 @@ function setCard(width, height) {
 				}
 			});
 		})(card);
-		document.body.append(card);
+		document.querySelector('#wrapper').append(card);
+		document.querySelector('#wrapper').style.width = 75 * width + 20 * width + 'px';
 	}
 	
 	document.querySelectorAll('.card').forEach(function(card, index) {
@@ -62,8 +81,10 @@ function setCard(width, height) {
 		setTimeout(function() {
 			card.classList.remove('flipped');
 			clickFlag = true;
+			startTime = new Date();
 		}, 5200);
 	});
 }
 
+suffle();
 setCard(width, height);
