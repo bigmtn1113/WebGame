@@ -6,6 +6,7 @@ var rivalField = document.querySelector('#rival-field');
 var myField = document.querySelector('#my-field');
 var rivalCost = document.querySelector('#rival-cost');
 var myCost = document.querySelector('#my-cost');
+var turnBtn = document.querySelector('#turn-btn');
 
 var rivalDeckData = [];
 var myDeckData = [];
@@ -44,9 +45,9 @@ function connectDataAndDom(data, dom, isHero) {
 		card.querySelector('.card-name').textContent = '영웅';
 	}
 	
-	card.addEventListener('click', function() {
+	card.addEventListener('click', function() {		
 		if (isMyTurn) {
-			if (!data.mine) return;
+			if (!data.mine || data.field) return;
 			if (myCostData - data.cost < 0) return;
 			
 			myField.append(card);
@@ -55,9 +56,9 @@ function connectDataAndDom(data, dom, isHero) {
 			myCostData -= data.cost;
 			myCost.textContent = myCostData;
 			
-			isMyTurn = false;
+			createMyDeck(1);
 		} else {
-			if (data.mine) return;
+			if (data.mine || data.field) return;
 			if (rivalCostData - data.cost < 0) return;
 			
 			rivalField.append(card);
@@ -66,8 +67,10 @@ function connectDataAndDom(data, dom, isHero) {
 			rivalCostData -= data.cost;
 			rivalCost.textContent = rivalCostData;
 			
-			isMyTurn = true;
+			createRivalDeck(1);
 		}
+		
+		data.field = true;
 	});
 	
 	dom.append(card);
@@ -77,12 +80,14 @@ function createRivalDeck(cnt) {
 	for (var i = 0; i < cnt; ++i)
 		rivalDeckData.push(cardFactory(false, false));
 	
+	rivalDeck.innerHTML = '';
 	rivalDeckData.forEach(function(data) { connectDataAndDom(data, rivalDeck); });
 }
 function createMyDeck(cnt) {
 	for (var i = 0; i < cnt; ++i)
 		myDeckData.push(cardFactory(false, true));
 
+	myDeck.innerHTML = '';
 	myDeckData.forEach(function(data) { connectDataAndDom(data, myDeck); });
 }
 function createRivalHero() {
@@ -93,6 +98,22 @@ function createMyHero() {
 	myHeroData = cardFactory(true, true);
 	connectDataAndDom(myHeroData, myHero, true);
 }
+
+turnBtn.addEventListener('click', function() {
+	isMyTurn = !isMyTurn;
+	
+	if (isMyTurn) {
+		myCostData = 10;
+		myCost.textContent = '10';
+	}
+	else {
+		rivalCostData = 10;
+		rivalCost.textContent = '10';
+	}
+	
+	rivalDeck.classList.toggle('turn');
+	myDeck.classList.toggle('turn');
+});
 
 function init() {
 	createRivalDeck(5);

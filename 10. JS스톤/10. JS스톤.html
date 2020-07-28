@@ -53,6 +53,14 @@
 		.card-hidden {
 			display: none;
 		}
+		#turn-btn {
+			float: right;
+			position: relative;
+			top: -23px;
+		}
+		.turn {
+			border: 1px solid black;
+		}
 	</style>
 </head>
 <body>
@@ -65,12 +73,13 @@
 		<div>덱</div>
 	</div>
 	<hr/>
+	<button id="turn-btn">턴 넘기기</button>
 	<div id="my">
 		<div id="my-field"></div>
 		<div id="my-hero"></div>
 		<div>코스트: <span id="my-cost">10</span>/<span>10</span></div>
 	</div>
-	<div id="my-deck">
+	<div id="my-deck" class="turn">
 		<div>덱</div>
 	</div>
 	<div class="card-hidden">
