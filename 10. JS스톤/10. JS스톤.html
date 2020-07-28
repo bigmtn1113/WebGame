@@ -8,15 +8,12 @@
 			display: inline-block;
 			margin-right: 50px;
 		}
-		#rival {
-			vertical-align: bottom;
-		}
 		#rival-deck, #my-deck {
 			width: 300px;
 			display: inline-block;
 			vertical-align: top;
 		}
-		#rival-deck, #rival-hero, #rival-cards, #my-deck, #my-hero, #my-cards {
+		#rival-deck, #rival-hero, #rival-field, #my-deck, #my-hero, #my-field {
 			text-align: center;
 			margin-bottom: 15px;
 		}
@@ -60,18 +57,18 @@
 </head>
 <body>
 	<div id="rival">
-		<div class="rival-cost">코스트: <span>10</span></div>
+		<div>코스트: <span id="rival-cost">10</span>/<span>10</span></div>
 		<div id="rival-hero"></div>
-		<div id="rival-cards"></div>
+		<div id="rival-field"></div>
 	</div>
 	<div id="rival-deck">
 		<div>덱</div>
 	</div>
 	<hr/>
 	<div id="my">
-		<div id="my-cards"></div>
+		<div id="my-field"></div>
 		<div id="my-hero"></div>
-		<div class="my-cost">코스트: <span>10</span></div>
+		<div>코스트: <span id="my-cost">10</span>/<span>10</span></div>
 	</div>
 	<div id="my-deck">
 		<div>덱</div>
