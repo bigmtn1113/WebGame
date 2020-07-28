@@ -8,8 +8,8 @@ var myDeckData = [];
 var rivalHeroData;
 var myHeroData;
 
-function Card(hero) {
-	if (hero) {
+function Card(isHero) {
+	if (isHero) {
 		this.att = Math.ceil(Math.random() * 2);
 		this.hp = Math.ceil(Math.random() * 5) + 25;
 	} else {
@@ -18,51 +18,42 @@ function Card(hero) {
 		this.cost = Math.floor((this.att + this.hp) / 2);
 	}
 }
-function cardFactory(hero) {
-	return new Card(hero);
+function cardFactory(isHero) { return new Card(isHero); }
+
+function connectDataAndDom(data, dom, isHero) {
+	var card = document.querySelector('.card-hidden .card').cloneNode(true);
+	card.querySelector('.card-cost').textContent = data.cost;
+	card.querySelector('.card-att').textContent = data.att;
+	card.querySelector('.card-hp').textContent = data.hp;
+	
+	if (isHero) {
+		card.children[0].classList.remove('card-cost');
+		card.children[0].classList.add('card-name');
+		card.querySelector('.card-name').textContent = '영웅';
+	}
+	
+	dom.append(card);
 }
 
 function createRivalDeck(cnt) {
-	for (var i = 0; i < cnt; ++i) {
+	for (var i = 0; i < cnt; ++i)
 		rivalDeckData.push(cardFactory());
-	}
-	rivalDeckData.forEach(function(data) {
-		var card = document.querySelector('.card-hidden .card').cloneNode(true);
-		card.querySelector('.card-cost').textContent = data.cost;
-		card.querySelector('.card-att').textContent = data.att;
-		card.querySelector('.card-hp').textContent = data.hp;
-		rivalDeck.append(card);
-	});
+	
+	rivalDeckData.forEach(function(data) { connectDataAndDom(data, rivalDeck); });
 }
 function createMyDeck(cnt) {
-	for (var i = 0; i < cnt; ++i) {
+	for (var i = 0; i < cnt; ++i)
 		myDeckData.push(cardFactory());
-	}
-	myDeckData.forEach(function(data) {
-		var card = document.querySelector('.card-hidden .card').cloneNode(true);
-		card.querySelector('.card-cost').textContent = data.cost;
-		card.querySelector('.card-att').textContent = data.att;
-		card.querySelector('.card-hp').textContent = data.hp;
-		myDeck.append(card);
-	});
+
+	myDeckData.forEach(function(data) { connectDataAndDom(data, myDeck); });
 }
 function createRivalHero() {
 	rivalHeroData = cardFactory(true);
-	
-	var card = document.querySelector('.card-hidden .card').cloneNode(true);
-	card.querySelector('.card-cost').textContent = '';
-	card.querySelector('.card-att').textContent = rivalHeroData.att;
-	card.querySelector('.card-hp').textContent = rivalHeroData.hp;
-	rivalHero.append(card);
+	connectDataAndDom(rivalHeroData, rivalHero, true);
 }
 function createMyHero() {
 	myHeroData = cardFactory(true);
-	
-	var card = document.querySelector('.card-hidden .card').cloneNode(true);
-	card.querySelector('.card-cost').textContent = '';
-	card.querySelector('.card-att').textContent = myHeroData.att;
-	card.querySelector('.card-hp').textContent = myHeroData.hp;
-	myHero.append(card);
+	connectDataAndDom(myHeroData, myHero, true);
 }
 
 function init() {
