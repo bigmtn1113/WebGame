@@ -1,21 +1,26 @@
-var rivalDeck = document.querySelector('#rival-deck');
-var myDeck = document.querySelector('#my-deck');
-var rivalHero = document.querySelector('#rival-hero');
-var myHero = document.querySelector('#my-hero');
-var rivalField = document.querySelector('#rival-field');
-var myField = document.querySelector('#my-field');
-var rivalCost = document.querySelector('#rival-cost');
-var myCost = document.querySelector('#my-cost');
-var turnBtn = document.querySelector('#turn-btn');
+var rival = {
+	deck: document.querySelector('#rival-deck'),
+	hero: document.querySelector('#rival-hero'),
+	field: document.querySelector('#rival-field'),
+	cost: document.querySelector('#rival-cost'),
+	deckData: [],
+	heroData: [],
+	fieldData: [],
+	costData: 10
+};
 
-var rivalDeckData = [];
-var myDeckData = [];
-var rivalHeroData;
-var myHeroData;
-var rivalFieldData = [];
-var myFieldData = [];
-var rivalCostData = 10;
-var myCostData = 10;
+var my = {
+	deck: document.querySelector('#my-deck'),
+	hero: document.querySelector('#my-hero'),
+	field: document.querySelector('#my-field'),
+	cost: document.querySelector('#my-cost'),
+	deckData: [],
+	heroData: [],
+	fieldData: [],
+	costData: 10
+};
+
+var turnBtn = document.querySelector('#turn-btn');
 var isMyTurn = true;
 
 function Card(isHero, isMyCard) {
@@ -33,6 +38,18 @@ function Card(isHero, isMyCard) {
 }
 function cardFactory(isHero, isMyCard) { return new Card(isHero, isMyCard); }
 
+function deckToField(card, data, isMyTurn) {
+	var rivalOrMy = isMyTurn ? my : rival;
+	if (rivalOrMy.costData - data.cost < 0) return false;
+			
+	rivalOrMy.field.append(card);
+	rivalOrMy.fieldData.push(data);
+	rivalOrMy.deckData.splice(rivalOrMy.deckData.indexOf(data), 1);
+	rivalOrMy.costData -= data.cost;
+	rivalOrMy.cost.textContent = rivalOrMy.costData;
+	return true;
+}
+
 function connectDataAndDom(data, dom, isHero) {
 	var card = document.querySelector('.card-hidden .card').cloneNode(true);
 	card.querySelector('.card-cost').textContent = data.cost;
@@ -48,24 +65,12 @@ function connectDataAndDom(data, dom, isHero) {
 	card.addEventListener('click', function() {		
 		if (isMyTurn) {
 			if (!data.mine || data.field) return;
-			if (myCostData - data.cost < 0) return;
-			
-			myField.append(card);
-			myFieldData.push(data);
-			myDeckData.splice(myDeckData.indexOf(data), 1);
-			myCostData -= data.cost;
-			myCost.textContent = myCostData;
+			if (!deckToField(card, data, isMyTurn)) return;
 			
 			createMyDeck(1);
 		} else {
 			if (data.mine || data.field) return;
-			if (rivalCostData - data.cost < 0) return;
-			
-			rivalField.append(card);
-			rivalFieldData.push(data);
-			rivalDeckData.splice(rivalDeckData.indexOf(data), 1);
-			rivalCostData -= data.cost;
-			rivalCost.textContent = rivalCostData;
+			if (!deckToField(card, data, isMyTurn)) return;
 			
 			createRivalDeck(1);
 		}
@@ -78,41 +83,41 @@ function connectDataAndDom(data, dom, isHero) {
 
 function createRivalDeck(cnt) {
 	for (var i = 0; i < cnt; ++i)
-		rivalDeckData.push(cardFactory(false, false));
+		rival.deckData.push(cardFactory(false, false));
 	
-	rivalDeck.innerHTML = '';
-	rivalDeckData.forEach(function(data) { connectDataAndDom(data, rivalDeck); });
+	rival.deck.innerHTML = '';
+	rival.deckData.forEach(function(data) { connectDataAndDom(data, rival.deck); });
 }
 function createMyDeck(cnt) {
 	for (var i = 0; i < cnt; ++i)
-		myDeckData.push(cardFactory(false, true));
+		my.deckData.push(cardFactory(false, true));
 
-	myDeck.innerHTML = '';
-	myDeckData.forEach(function(data) { connectDataAndDom(data, myDeck); });
+	my.deck.innerHTML = '';
+	my.deckData.forEach(function(data) { connectDataAndDom(data, my.deck); });
 }
 function createRivalHero() {
-	rivalHeroData = cardFactory(true, false);
-	connectDataAndDom(rivalHeroData, rivalHero, true);
+	rival.heroData = cardFactory(true, false);
+	connectDataAndDom(rival.heroData, rival.hero, true);
 }
 function createMyHero() {
-	myHeroData = cardFactory(true, true);
-	connectDataAndDom(myHeroData, myHero, true);
+	my.heroData = cardFactory(true, true);
+	connectDataAndDom(my.heroData, my.hero, true);
 }
 
 turnBtn.addEventListener('click', function() {
 	isMyTurn = !isMyTurn;
 	
 	if (isMyTurn) {
-		myCostData = 10;
-		myCost.textContent = '10';
+		my.costData = 10;
+		my.cost.textContent = '10';
 	}
 	else {
-		rivalCostData = 10;
-		rivalCost.textContent = '10';
+		rival.costData = 10;
+		rival.cost.textContent = '10';
 	}
 	
-	rivalDeck.classList.toggle('turn');
-	myDeck.classList.toggle('turn');
+	rival.deck.classList.toggle('turn');
+	my.deck.classList.toggle('turn');
 });
 
 function init() {
