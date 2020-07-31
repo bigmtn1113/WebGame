@@ -4,6 +4,10 @@
 	<meta charset="utf-8"/>
 	<title>JS스톤</title>
 	<style>
+		body {
+			user-select: none;
+			text-align: center;
+		}
 		#rival, #my {
 			display: inline-block;
 			margin-top: 10px;
@@ -55,6 +59,12 @@
 		.card-hidden {
 			display: none;
 		}
+		.card-selected {
+			border: 2px solid blue;
+		}
+		.card-turnover {
+			background-color: lightgray;
+		}
 		#turn-btn {
 			float: right;
 			position: relative;
@@ -67,23 +77,24 @@
 </head>
 <body>
 	<div id="rival">
-		<div>코스트: <span id="rival-cost">10</span>/<span>10</span></div>
+		<div>cost: <span id="rival-cost">10</span>/<span>10</span></div>
 		<div id="rival-hero"></div>
 		<div id="rival-field"></div>
 	</div>
-	<div id="rival-deck">
-		<div>덱</div>
-	</div>
+	<div id="rival-deck"></div>
 	<hr/>
-	<button id="turn-btn">턴 넘기기</button>
+	<button id="turn-btn">Turn End</button>
 	<div id="my">
 		<div id="my-field"></div>
 		<div id="my-hero"></div>
-		<div>코스트: <span id="my-cost">10</span>/<span>10</span></div>
+		<div>cost: <span id="my-cost">10</span>/<span>10</span></div>
 	</div>
-	<div id="my-deck" class="turn">
-		<div>덱</div>
-	</div>
+	<div id="my-deck" class="turn"></div>
+	<p>cost: 카드의 비용입니다. 파란색 원에 표시되어 있습니다.<br/>
+		att: 카드의 공격력입니다. 노란색 원에 표시되어 있습니다.<br/>
+		hp: 카드의 체력입니다. 빨간색 원에 표시되어 있습니다.<br/>
+	</p>
+	
 	<div class="card-hidden">
 		<div class="card">
 			<div class="card-cost"></div>
