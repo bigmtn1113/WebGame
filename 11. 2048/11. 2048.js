@@ -41,7 +41,7 @@ function createRandomPosition() {
 	});
 	
 	var randomPosition = randomPositionList[Math.floor(Math.random() * randomPositionList.length)];
-	tableData[randomPosition[0]][randomPosition[1]] = '2';
+	tableData[randomPosition[0]][randomPosition[1]] = 2;
 	draw();
 }
 
@@ -57,8 +57,12 @@ window.addEventListener('keydown', function(e) {
 			
 			tableData.forEach(function(rowData, x) {
 				rowData.forEach(function(columnData, y) {
-					if (columnData)
-						newData[y].push(columnData);
+					if (columnData) {
+						if (newData[y][newData[y].length - 1] === columnData)
+							newData[y][newData[y].length - 1] *= 2;
+						else
+							newData[y].push(columnData);
+					}
 				});
 			});
 			
@@ -73,8 +77,12 @@ window.addEventListener('keydown', function(e) {
 			
 			tableData.forEach(function(rowData, x) {
 				rowData.forEach(function(columnData, y) {
-					if (columnData)
-						newData[y].push(columnData);
+					if (columnData) {
+						if (newData[y][newData[y].length - 1] === columnData)
+							newData[y][newData[y].length - 1] *= 2;
+						else
+							newData[y].unshift(columnData);
+					}
 				});
 			});
 			
@@ -89,8 +97,12 @@ window.addEventListener('keydown', function(e) {
 			
 			tableData.forEach(function(rowData, x) {
 				rowData.forEach(function(columnData, y) {
-					if (columnData)
-						newData[x].push(columnData);
+					if (columnData) {
+						if (newData[x][newData[x].length - 1] === columnData)
+							newData[x][newData[x].length - 1] *= 2;	
+						else
+							newData[x].push(columnData);
+					}
 				});
 			});
 			
@@ -105,8 +117,12 @@ window.addEventListener('keydown', function(e) {
 			
 			tableData.forEach(function(rowData, x) {
 				rowData.forEach(function(columnData, y) {
-					if (columnData)
-						newData[x].push(columnData);
+					if (columnData) {
+						if (newData[x][newData[x].length - 1] === columnData)
+							newData[x][newData[x].length - 1] *= 2;	
+						else
+							newData[x].unshift(columnData);
+					}
 				});
 			});
 			
