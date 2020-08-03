@@ -32,10 +32,16 @@ function draw() {
 }
 
 function createRandomPosition() {
-	var randomX = Math.floor(Math.random() * 4);
-	var randomY = Math.floor(Math.random() * 4);
+	var randomPositionList = [];
+	tableData.forEach(function(rowData, x) {
+		rowData.forEach(function(columnData, y) {
+			if (!columnData)
+				randomPositionList.push([x, y]);
+		});
+	});
 	
-	tableData[randomX][randomY] = '2';
+	var randomPosition = randomPositionList[Math.floor(Math.random() * randomPositionList.length)];
+	tableData[randomPosition[0]][randomPosition[1]] = '2';
 	draw();
 }
 
@@ -112,4 +118,19 @@ window.addEventListener('keydown', function(e) {
 			break;
 	}
 	createRandomPosition();
+	
+	var endcnt = 0;
+	tableData.forEach(function(rowData, x) {
+		rowData.forEach(function(columnData, y) {
+			if (columnData)
+				++endcnt;
+		});
+	});
+	if (endcnt === 16) {
+		alert('Game Over..');
+		table.innerHTML = '';
+		tableData = [];
+		init();
+		createRandomPosition();
+	}
 });
