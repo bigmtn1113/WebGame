@@ -5,6 +5,9 @@
 		<title>2048</title>
 	</head>
 	<style>
+		#frame {
+			display: inline-block;
+		}
 		#table {
 			border-collapse: collapse;
 		}
@@ -16,9 +19,18 @@
 			font-weight: bold;
 			text-align: center;
 		}
+		#score {
+			text-align: right;
+			font-size: 30px;
+			font-weight: bold;
+			margin: 10px;
+		}
 	</style>
 	<body>
-		<table id="table"></table>
+		<div id="frame">
+			<div id="score"></div>
+			<table id="table"></table>
+		</div>
 		<script src="11. 2048.js"></script>
 	</body>
 </html>

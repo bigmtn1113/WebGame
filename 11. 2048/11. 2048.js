@@ -1,7 +1,17 @@
+var frame = document.querySelector('#frame');
 var table = document.querySelector('#table');
-var tableData = [];
+var score = document.querySelector('#score');
+var tableData;
+var scoreData;
 
 function init() {
+	tableData = [];
+	scoreData = 0;
+	
+	table.innerHTML = '';
+	score.textContent = '0';
+	frame.append(score);
+	
 	[1, 2, 3, 4].forEach(function() {
 		var rowData = [];
 		var tr = document.createElement('tr');
@@ -17,7 +27,8 @@ function init() {
 		tableData.push(rowData);
 		table.append(tr);
 	});
-	document.body.append(table);
+	
+	frame.append(table);
 }
 
 function draw() {
@@ -48,6 +59,22 @@ function createRandomPosition() {
 init();
 createRandomPosition();
 
+function sumScore(number) {
+	scoreData += number;
+	score.textContent = scoreData;
+}
+
+function renewTableData(arrow, newData) {
+	[1, 2, 3, 4].forEach(function(rowData, x) {
+		[1, 2, 3, 4].forEach(function(columnData, y) {
+			if (arrow === 'up') tableData[x][y] = newData[y][x] || 0;
+			else if (arrow === 'down') tableData[3 - x][y] = newData[y][x] || 0;
+			else if (arrow === 'left') tableData[x][y] = newData[x][y] || 0;
+			else if (arrow === 'right') tableData[x][3 - y] = newData[x][y] || 0;
+		});
+	});
+}
+
 window.addEventListener('keydown', function(e) {
 	if (!['ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight'].includes(e.code)) return;
 	
@@ -58,19 +85,17 @@ window.addEventListener('keydown', function(e) {
 			tableData.forEach(function(rowData, x) {
 				rowData.forEach(function(columnData, y) {
 					if (columnData) {
-						if (newData[y][newData[y].length - 1] === columnData)
+						if (newData[y][newData[y].length - 1] === columnData) {
 							newData[y][newData[y].length - 1] *= 2;
+							sumScore(newData[y][newData[y].length - 1]);
+						}
 						else
 							newData[y].push(columnData);
 					}
 				});
 			});
 			
-			[1, 2, 3, 4].forEach(function(rowData, x) {
-				[1, 2, 3, 4].forEach(function(columnData, y) {
-					tableData[x][y] = newData[y][x] || 0;
-				});
-			});
+			renewTableData('up', newData);
 			break;
 		case 'ArrowDown':
 			var newData = [[], [], [], []];
@@ -85,22 +110,21 @@ window.addEventListener('keydown', function(e) {
 				if (newData[x].length > 1 && newData[x][0] === newData[x][1]) {
 					newData[x][0] *= 2;
 					newData[x].splice(1, 1);
+					sumScore(newData[x][0]);
 				}
 				if (newData[x].length > 2 && newData[x][1] === newData[x][2]) {
 					newData[x][1] *= 2;
 					newData[x].splice(2, 1);
+					sumScore(newData[x][1]);
 				}
 				if (newData[x].length > 3 && newData[x][2] === newData[x][3]) {
 					newData[x][2] *= 2;
 					newData[x].splice(3, 1);
+					sumScore(newData[x][2]);
 				}
 			}
 			
-			[1, 2, 3, 4].forEach(function(rowData, x) {
-				[1, 2, 3, 4].forEach(function(columnData, y) {
-					tableData[3 - x][y] = newData[y][x] || 0;
-				});
-			});
+			renewTableData('down', newData);
 			break;
 		case 'ArrowLeft':
 			var newData = [[], [], [], []];
@@ -108,19 +132,17 @@ window.addEventListener('keydown', function(e) {
 			tableData.forEach(function(rowData, x) {
 				rowData.forEach(function(columnData, y) {
 					if (columnData) {
-						if (newData[x][newData[x].length - 1] === columnData)
+						if (newData[x][newData[x].length - 1] === columnData) {
 							newData[x][newData[x].length - 1] *= 2;
+							sumScore(newData[x][newData[x].length - 1]);
+						}
 						else
 							newData[x].push(columnData);
 					}
 				});
 			});
 			
-			[1, 2, 3, 4].forEach(function(rowData, x) {
-				[1, 2, 3, 4].forEach(function(columnData, y) {
-					tableData[x][y] = newData[x][y] || 0;
-				});
-			});
+			renewTableData('left', newData);
 			break;
 		case 'ArrowRight':
 			var newData = [[], [], [], []];
@@ -133,22 +155,21 @@ window.addEventListener('keydown', function(e) {
 				if (newData[x].length > 1 && newData[x][0] === newData[x][1]) {
 					newData[x][0] *= 2;
 					newData[x].splice(1, 1);
+					sumScore(newData[x][0]);
 				}
 				if (newData[x].length > 2 && newData[x][1] === newData[x][2]) {
 					newData[x][1] *= 2;
 					newData[x].splice(2, 1);
+					sumScore(newData[x][1]);
 				}
 				if (newData[x].length > 3 && newData[x][2] === newData[x][3]) {
 					newData[x][2] *= 2;
 					newData[x].splice(3, 1);
+					sumScore(newData[x][2]);
 				}
 			});
 			
-			[1, 2, 3, 4].forEach(function(rowData, x) {
-				[1, 2, 3, 4].forEach(function(columnData, y) {
-					tableData[x][3 - y] = newData[x][y] || 0;
-				});
-			});
+			renewTableData('right', newData);
 			break;
 	}
 	createRandomPosition();
@@ -161,9 +182,7 @@ window.addEventListener('keydown', function(e) {
 		});
 	});
 	if (endcnt === 16) {
-		alert('Game Over..');
-		table.innerHTML = '';
-		tableData = [];
+		alert('score: ' + scoreData + '\nGame Over..');
 		init();
 		createRandomPosition();
 	}
