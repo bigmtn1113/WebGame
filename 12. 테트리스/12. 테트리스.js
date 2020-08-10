@@ -189,21 +189,21 @@ var blocks = [
 ];
 var stopDrop = false;
 
-function drawTable() {
-	var fragment = document.createDocumentFragment();	// 바로 화면에 그리는 것보다 fragment를 만들어서 붙이는게 더 빠름.
+function init() {
+	const fragment = document.createDocumentFragment();	// 바로 화면에 그리는 것보다 fragment를 만들어서 붙이는게 더 빠름.
 	
-	for (var i = 0; i < 20; ++i) {
-		var tr = document.createElement('tr');
-		tableData.push([]);
-		
-		for (var j = 0; j < 10; ++j) {
-			var td = document.createElement('td');
-			tableData[i].push(0);
-			
-			tr.append(td);
-		}
+	[...Array(20).keys()].forEach((row, x) => {
+		const tr = document.createElement('tr');
 		fragment.append(tr);
-	}
+		
+		[...Array(10).keys()].forEach((col, y) => {
+			const td = document.createElement('td');
+			tr.append(td);
+		});
+		
+		
+		tableData.push(Array(10).fill(0));
+	});
 	table.append(fragment);
 }
 
@@ -228,7 +228,7 @@ function createBlock() {
 	drawView();
 }
 
-//drawTable();
+init();
 //createBlock();
 
 function dropBlock() {
