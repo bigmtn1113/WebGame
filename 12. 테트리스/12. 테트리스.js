@@ -1,22 +1,192 @@
 var table = document.querySelector('#table');
 var tableData = [];
-var blockData = {	// [색깔, 쌓아지기 전인가, 모양]
-	0: ['white', true, []],
-	1: ['skyblue', true, [[1, 1, 1, 1]]],
-	2: ['blue', true, [[2, 0, 0,], [2, 2, 2]]],
-	3: ['orange', true, [[0, 0, 3,], [3, 3, 3]]],
-	4: ['yellow', true, [[4, 4,], [4, 4]]],
-	5: ['lightgreen', true, [[0, 5, 5,], [5, 5, 0]]],
-	6: ['purple', true, [[0, 6, 0,], [6, 6, 6]]],
-	7: ['red', true, [[7, 7, 0,], [0, 7, 7]]],
-	10: ['skyblue', false, [[1, 1, 1, 1]]],
-	20: ['blue', false, [[2, 0, 0,], [2, 2, 2]]],
-	30: ['orange', false, [[0, 0, 3,], [3, 3, 3]]],
-	40: ['yellow', false, [[4, 4,], [4, 4]]],
-	50: ['lightgreen', false, [[0, 5, 5,], [5, 5, 0]]],
-	60: ['purple', false, [[0, 6, 0,], [6, 6, 6]]],
-	70: ['red', false, [[7, 7, 0,], [0, 7, 7]]],
-};
+var blocks = [
+	{
+		name: 'i',
+		numCode: 1,
+		color: 'skyblue',
+		shapeIndex: 0,
+		shape: [
+			[
+				[0, 0, 0, 0],
+				[0, 0, 0, 0],
+				[1, 1, 1, 1],
+				[0, 0, 0, 0]
+			],
+			[
+				[0, 1, 0, 0],
+				[0, 1, 0, 0],
+				[0, 1, 0, 0],
+				[0, 1, 0, 0]
+			],
+			[
+				[0, 0, 0, 0],
+				[1, 1, 1, 1],
+				[0, 0, 0, 0],
+				[0, 0, 0, 0]
+			],
+			[
+				[0, 0, 1, 0],
+				[0, 0, 1, 0],
+				[0, 0, 1, 0],
+				[0, 0, 1, 0]
+			]
+		]
+	},
+	{
+		name: 'j',
+		numCode: 2,
+		color: 'blue',
+		shapeIndex: 0,
+		shape: [
+			[
+				[1, 0, 0],
+				[1, 1, 1],
+				[0, 0, 0],
+			],
+			[
+				[0, 1, 1],
+				[0, 1, 0],
+				[0, 1, 0],
+			],
+			[
+				[0, 0, 0],
+				[1, 1, 1],
+				[0, 0, 1],
+			],
+			[
+				[0, 1, 0],
+				[0, 1, 0],
+				[1, 1, 0],
+			]
+		]
+	},
+	{
+		name: 'l',
+		numCode: 3,
+		color: 'orange',
+		shapeIndex: 0,
+		shape: [
+			[
+				[0, 0, 1],
+				[1, 1, 1],
+				[0, 0, 0],
+			],
+			[
+				[0, 1, 0],
+				[0, 1, 0],
+				[0, 1, 1],
+			],
+			[
+				[0, 0, 0],
+				[1, 1, 1],
+				[1, 0, 0],
+			],
+			[
+				[1, 1, 0],
+				[0, 1, 0],
+				[0, 1, 0],
+			]
+		]
+	},
+	{
+		name: 'o',
+		numCode: 4,
+		color: 'yellow',
+		shapeIndex: 0,
+		shape: [
+			[
+				[0, 0, 0],
+				[0, 1, 1],
+				[0, 1, 1],
+			]
+		]
+	},
+	{
+		name: 's',
+		numCode: 5,
+		color: 'lightgreen',
+		shapeIndex: 0,
+		shape: [
+			[
+				[0, 0, 0],
+				[0, 1, 1],
+				[1, 1, 0],
+			],
+			[
+				[1, 0, 0],
+				[1, 1, 0],
+				[0, 1, 0],
+			],
+			[
+				[0, 1, 1],
+				[1, 1, 0],
+				[0, 0, 0],
+			],
+			[
+				[0, 1, 0],
+				[0, 1, 1],
+				[0, 0, 1],
+			]
+		]
+	},
+	{
+		name: 't',
+		numCode: 6,
+		color: 'purple',
+		shapeIndex: 0,
+		shape: [
+			[
+				[0, 1, 0],
+				[1, 1, 1],
+				[0, 0, 0],
+			],
+			[
+				[0, 1, 0],
+				[0, 1, 1],
+				[0, 1, 0],
+			],
+			[
+				[0, 0, 0],
+				[1, 1, 1],
+				[0, 1, 0],
+			],
+			[
+				[0, 1, 0],
+				[1, 1, 0],
+				[0, 1, 0],
+			]
+		]
+	},
+	{
+		name: 'z',
+		numCode: 7,
+		color: 'red',
+		shapeIndex: 0,
+		shape: [
+			[
+				[0, 0, 0],
+				[1, 1, 0],
+				[0, 1, 1],
+			],
+			[
+				[0, 1, 0],
+				[1, 1, 0],
+				[1, 0, 0],
+			],
+			[
+				[1, 1, 0],
+				[0, 1, 1],
+				[0, 0, 0],
+			],
+			[
+				[0, 0, 1],
+				[0, 1, 1],
+				[0, 1, 0],
+			]
+		]
+	}
+];
 var stopDrop = false;
 
 function drawTable() {
@@ -58,8 +228,8 @@ function createBlock() {
 	drawView();
 }
 
-drawTable();
-createBlock();
+//drawTable();
+//createBlock();
 
 function dropBlock() {
 	for (var x = tableData.length - 1; x >= 0; --x) {
@@ -105,4 +275,4 @@ window.addEventListener('keyup', function(e) {
 	}
 });
 
-setInterval(dropBlock, 100);
+//setInterval(dropBlock, 100);
