@@ -9,18 +9,6 @@ var blocks = [
 		shape: [
 			[
 				[0, 0, 0, 0],
-				[0, 0, 0, 0],
-				[1, 1, 1, 1],
-				[0, 0, 0, 0]
-			],
-			[
-				[0, 1, 0, 0],
-				[0, 1, 0, 0],
-				[0, 1, 0, 0],
-				[0, 1, 0, 0]
-			],
-			[
-				[0, 0, 0, 0],
 				[1, 1, 1, 1],
 				[0, 0, 0, 0],
 				[0, 0, 0, 0]
@@ -30,6 +18,18 @@ var blocks = [
 				[0, 0, 1, 0],
 				[0, 0, 1, 0],
 				[0, 0, 1, 0]
+			],
+			[
+				[0, 0, 0, 0],
+				[0, 0, 0, 0],
+				[1, 1, 1, 1],
+				[0, 0, 0, 0]
+			],
+			[
+				[0, 1, 0, 0],
+				[0, 1, 0, 0],
+				[0, 1, 0, 0],
+				[0, 1, 0, 0]
 			]
 		]
 	},
@@ -96,9 +96,9 @@ var blocks = [
 		shapeIndex: 0,
 		shape: [
 			[
+				[0, 1, 1],
+				[0, 1, 1],
 				[0, 0, 0],
-				[0, 1, 1],
-				[0, 1, 1],
 			]
 		]
 	},
@@ -109,16 +109,6 @@ var blocks = [
 		shapeIndex: 0,
 		shape: [
 			[
-				[0, 0, 0],
-				[0, 1, 1],
-				[1, 1, 0],
-			],
-			[
-				[1, 0, 0],
-				[1, 1, 0],
-				[0, 1, 0],
-			],
-			[
 				[0, 1, 1],
 				[1, 1, 0],
 				[0, 0, 0],
@@ -127,6 +117,16 @@ var blocks = [
 				[0, 1, 0],
 				[0, 1, 1],
 				[0, 0, 1],
+			],
+			[
+				[0, 0, 0],
+				[0, 1, 1],
+				[1, 1, 0],
+			],
+			[
+				[1, 0, 0],
+				[1, 1, 0],
+				[0, 1, 0],
 			]
 		]
 	},
@@ -165,16 +165,6 @@ var blocks = [
 		shapeIndex: 0,
 		shape: [
 			[
-				[0, 0, 0],
-				[1, 1, 0],
-				[0, 1, 1],
-			],
-			[
-				[0, 1, 0],
-				[1, 1, 0],
-				[1, 0, 0],
-			],
-			[
 				[1, 1, 0],
 				[0, 1, 1],
 				[0, 0, 0],
@@ -183,6 +173,16 @@ var blocks = [
 				[0, 0, 1],
 				[0, 1, 1],
 				[0, 1, 0],
+			],
+			[
+				[0, 0, 0],
+				[1, 1, 0],
+				[0, 1, 1],
+			],
+			[
+				[0, 1, 0],
+				[1, 1, 0],
+				[1, 0, 0],
 			]
 		]
 	}
@@ -208,20 +208,23 @@ function init() {
 }
 
 function drawView() {
-	tableData.forEach(function(row, x) {
-		row.forEach(function(column, y) {
-			table.children[x].children[y].className = blockData[column][0];
+	tableData.forEach((row, x) => {
+		row.forEach((col, y) => {
+			if (col > 0)
+				table.children[x].children[y].className = blocks[col - 1].color;
+			else
+				table.children[x].children[y].className = '';
 		});
 	});
 }
 
 function createBlock() {
-	stopDrop = false;
+	const block = blocks[Math.floor(Math.random() * blocks.length)];
 	
-	var block = blockData[Math.floor(Math.random() * 8)][2];
-	block.forEach(function(row, x) {
-		row.forEach(function(column, y) {
-			tableData[x][y + 3] = column;
+	block.shape[0].forEach((row, x) => {
+		row.forEach((col, y) => {
+			if (col)
+				tableData[x][y + 3] = block.numCode;
 		});
 	});
 	
@@ -229,7 +232,7 @@ function createBlock() {
 }
 
 init();
-//createBlock();
+createBlock();
 
 function dropBlock() {
 	for (var x = tableData.length - 1; x >= 0; --x) {
