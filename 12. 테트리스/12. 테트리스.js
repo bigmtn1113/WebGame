@@ -187,7 +187,11 @@ var blocks = [
 		]
 	}
 ];
-var stopDrop = false;
+var block;
+var blockPosition;
+
+const isValidBlock = value => (value > 0 && value < 10);
+const isInvalidBlock = value => (value === undefined || value >= 10);
 
 function init() {
 	const fragment = document.createDocumentFragment();	// 바로 화면에 그리는 것보다 fragment를 만들어서 붙이는게 더 빠름.
@@ -211,7 +215,7 @@ function drawView() {
 	tableData.forEach((row, x) => {
 		row.forEach((col, y) => {
 			if (col > 0)
-				table.children[x].children[y].className = blocks[col - 1].color;
+				table.children[x].children[y].className = col >= 10 ? blocks[col / 10 - 1].color : blocks[col - 1].color;
 			else
 				table.children[x].children[y].className = '';
 		});
@@ -219,7 +223,8 @@ function drawView() {
 }
 
 function createBlock() {
-	const block = blocks[Math.floor(Math.random() * blocks.length)];
+	block = blocks[Math.floor(Math.random() * blocks.length)];
+	blockPosition = [0, 3];
 	
 	block.shape[0].forEach((row, x) => {
 		row.forEach((col, y) => {
@@ -233,25 +238,45 @@ function createBlock() {
 
 init();
 createBlock();
+setInterval(dropBlock, 100);
 
 function dropBlock() {
-	for (var x = tableData.length - 1; x >= 0; --x) {
-		tableData[x].forEach(function(column, y) {
-			if (column > 0 && column < 8) {	// 블록(1 ~ 7)
-				if (tableData[x + 1] && !stopDrop) {	// 내려갈 칸이 존재하는가 && 블록이 땅에 닿지 않았는가
-					tableData[x + 1][y] = column;
-					tableData[x][y] = 0;
-				} else {
-					stopDrop = true;
-					tableData[x][y] = column * 10;	// 쌓아진 블록
-				}
+	const validBlocks = [];
+	let canGoDown = true;
+	let blockShape = block.shape[block.shapeIndex];
+	
+	for (let i = blockPosition[0]; i < blockPosition[0] + blockShape.length; ++i) {
+		if (i >= 20) break;
+		
+		for (let j = blockPosition[1]; j < blockPosition[1] + blockShape.length; ++j) {
+			if (isValidBlock(tableData[i][j])) {
+				validBlocks.push([i, j]);
+				
+				if (isInvalidBlock(tableData[i + 1] && tableData[i + 1][j]))
+					canGoDown = false;
 			}
-		});
+		}
 	}
-	if (stopDrop) {	// 블록이 땅에 닿으면 새로운 블록 생성
+	
+	if (canGoDown) {
+		for (let i = tableData.length - 1; i >= 0; --i) {
+			tableData[i].forEach((data, j) => {
+				if (data < 10 && tableData[i + 1] && tableData[i + 1][j] < 10) {
+					tableData[i + 1][j] = data;
+					tableData[i][j] = 0;
+				}
+			});
+		}
+		
+		blockPosition = [blockPosition[0] + 1, blockPosition[1]];
+		drawView();
+	} else {
+		validBlocks.forEach((block) => {
+			tableData[block[0]][block[1]] *= 10;
+		});
+		
 		createBlock();
 	}
-	drawView();
 }
 
 window.addEventListener('keydown', function(e) {	// 누르고 있어도 되는 경우
@@ -277,5 +302,3 @@ window.addEventListener('keyup', function(e) {
 			break;
 	}
 });
-
-//setInterval(dropBlock, 100);
