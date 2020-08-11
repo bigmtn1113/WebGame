@@ -225,6 +225,21 @@ function drawView() {
 function createBlock() {
 	block = blocks[Math.floor(Math.random() * blocks.length)];
 	blockPosition = [0, 3];
+	let isGameOver = false;
+	
+	block.shape[0].slice(0, 2).forEach((row, x) => {
+		row.forEach((col, y) => {
+			if (tableData[x][y + 3])
+				isGameOver = true;
+		});
+	});
+	
+	if (isGameOver) {
+		clearInterval(interval);
+		drawView();
+		alert('game over');
+		return;
+	}
 	
 	block.shape[0].forEach((row, x) => {
 		row.forEach((col, y) => {
@@ -233,12 +248,13 @@ function createBlock() {
 		});
 	});
 	
+	
 	drawView();
 }
 
 init();
 createBlock();
-setInterval(dropBlock, 100);
+let interval = setInterval(dropBlock, 100);
 
 function dropBlock() {
 	const validBlocks = [];
