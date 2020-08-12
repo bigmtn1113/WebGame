@@ -284,7 +284,7 @@ function dropBlock() {
 			});
 		}
 		
-		blockPosition = [blockPosition[0] + 1, blockPosition[1]];
+		++blockPosition[0];
 		drawView();
 	} else {
 		validBlocks.forEach((block) => {
@@ -298,11 +298,70 @@ function dropBlock() {
 window.addEventListener('keydown', function(e) {	// 누르고 있어도 되는 경우
 	switch(e.code) {
 		case 'ArrowDown':
+			dropBlock();
 			break;
-		case 'ArrowLeft':
+		case 'ArrowLeft': {
+			let isMovable = true;
+			let blockShape = block.shape[block.shapeIndex];
+			
+			for (let i = blockPosition[0]; i < blockPosition[0] + blockShape.length; ++i) {
+				if (!isMovable) break;
+				
+				for (let j = blockPosition[1]; j < blockPosition[1] + blockShape.length; ++j) {
+					if (!tableData[i] || !tableData[i][j]) continue;
+					if (isValidBlock(tableData[i][j]) && isInvalidBlock(tableData[i] && tableData[i][j - 1]))
+						isMovable = false;
+				}
+			}
+			
+			if (isMovable) {
+				--blockPosition[1];
+				
+				tableData.forEach((row, i) => {
+					row.forEach((col, j) => {
+						if (tableData[i][j - 1] === 0 && col < 10) {
+							tableData[i][j - 1] = col;
+							tableData[i][j] = 0;
+						}
+					});
+				});
+				
+				drawView();
+			}
+			
 			break;
-		case 'ArrowRight':
+		}
+		case 'ArrowRight': {
+			let isMovable = true;
+			let blockShape = block.shape[block.shapeIndex];
+			
+			for (let i = blockPosition[0]; i < blockPosition[0] + blockShape.length; ++i) {
+				if (!isMovable) break;
+				
+				for (let j = blockPosition[1]; j < blockPosition[1] + blockShape.length; ++j) {
+					if (!tableData[i] || !tableData[i][j]) continue;
+					if (isValidBlock(tableData[i][j]) && isInvalidBlock(tableData[i] && tableData[i][j + 1]))
+						isMovable = false;
+				}
+			}
+			
+			if (isMovable) {
+				++blockPosition[1];
+				
+				tableData.forEach((row, i) => {
+					for (let j = row.length - 1; j >= 0; --j) {
+						if (tableData[i][j + 1] === 0 && row[j] < 10) {
+							tableData[i][j + 1] = row[j];
+							tableData[i][j] = 0;
+						}
+					}
+				});
+				
+				drawView();
+			}
+			
 			break;
+		}
 		default:
 			break;
 	}
