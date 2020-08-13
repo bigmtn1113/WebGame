@@ -432,6 +432,7 @@ window.addEventListener('keydown', function(e) {	// 누르고 있어도 되는 �
 });
 
 window.addEventListener('keyup', function(e) {
+	console.log(e.code);
 	switch(e.code) {
 		case 'Space':
 			while (dropBlock()) {}
@@ -440,6 +441,41 @@ window.addEventListener('keyup', function(e) {
 			let isChangeable = true;
 			let blockShape = block.shape[block.shapeIndex];
 			const nextShapeIndex = block.shapeIndex + 1 === block.shape.length ? 0 : block.shapeIndex + 1;
+			const nextBlockShape = block.shape[nextShapeIndex];
+			
+			for (let i = blockPosition[0]; i < blockPosition[0] + blockShape.length; ++i) {
+				if (!isChangeable) break;
+				
+				for (let j = blockPosition[1]; j < blockPosition[1] + blockShape.length; ++j) {
+					if (!tableData[i]) continue;
+					if (nextBlockShape[i - blockPosition[0]][j - blockPosition[1]] > 0 && isInvalidBlock(tableData[i] && tableData[i][j]))
+						isChangeable = false;
+				}
+			}
+			
+			if (isChangeable) {
+				for (let i = blockPosition[0]; i < blockPosition[0] + blockShape.length; ++i) {
+					for (let j = blockPosition[1]; j < blockPosition[1] + blockShape.length; ++j) {
+						if (!tableData[i]) continue;
+						let nextBlockShapeCell = nextBlockShape[i - blockPosition[0]][j - blockPosition[1]];
+						
+						if (nextBlockShapeCell > 0 && tableData[i][j] === 0)
+							tableData[i][j] = block.numCode;
+						else if (nextBlockShapeCell === 0 && tableData[i][j] && tableData[i][j] < 10)
+							tableData[i][j] = 0;
+					}
+				}
+				
+				block.shapeIndex = nextShapeIndex;
+				drawView();
+			}
+			
+			break;
+		}
+		case 'KeyZ': {
+			let isChangeable = true;
+			let blockShape = block.shape[block.shapeIndex];
+			const nextShapeIndex = block.shapeIndex - 1 === -1 ? block.shape.length - 1 : block.shapeIndex - 1;
 			const nextBlockShape = block.shape[nextShapeIndex];
 			
 			for (let i = blockPosition[0]; i < blockPosition[0] + blockShape.length; ++i) {
