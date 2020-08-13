@@ -302,6 +302,15 @@ function checkRows() {
 	tableData = tableData.filter((row, i) => !fullRows.includes(i));
 	for (let i = 0; i < fullRows.length; ++i)
 		tableData.unshift([0, 0, 0, 0, 0, 0, 0, 0, 0, 0]);
+	
+	let score = parseInt(document.querySelector('#score').textContent);
+	
+	if (fullRows.length === 1) score += 100;
+	else if (fullRows.length === 2) score += 300;
+	else if (fullRows.length === 3) score += 500;
+	else if (fullRows.length === 4) score += 800;
+	
+	document.querySelector('#score').textContent = score;
 }
 
 function dropBlock() {
