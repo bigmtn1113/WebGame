@@ -4,16 +4,26 @@
 		<meta charset="utf-8"/>
 		<title>테트리스</title>
 		<style>
-			#table {
+			body {
+				text-align: center;
+			}
+			#table, #next-table{
+				display: inline-block;
 				border-collapse: collapse;
+			}
+			#next-table {
+				position: relative;
+				top: -547px;
 			}
 			#table td {
 				border: 1px solid black;
 				width: 30px;
 				height: 30px;
 			}
-			td.white {
-				background-color: white;
+			#next-table td {
+				border: 1px solid black;
+				width: 15px;
+				height: 15px;
 			}
 			td.skyblue {
 				background-color: skyblue;
@@ -40,6 +50,7 @@
 	</head>
 	<body>
 		<table id="table"></table>
+		<table id="next-table"></table>
 		<script src="12. 테트리스.js"></script>
 	</body>
 </html>

@@ -1,4 +1,5 @@
 var table = document.querySelector('#table');
+var nextTable = document.querySelector('#next-table');
 var tableData = [];
 var blocks = [
 	{
@@ -188,6 +189,7 @@ var blocks = [
 	}
 ];
 var block;
+var nextBlock;
 var blockPosition;
 
 const isValidBlock = value => (value > 0 && value < 10);
@@ -209,6 +211,19 @@ function init() {
 		tableData.push(Array(10).fill(0));
 	});
 	table.append(fragment);
+	
+	const nextFragment = document.createDocumentFragment();
+	
+	[...Array(4).keys()].forEach((row, x) => {
+		const tr = document.createElement('tr');
+		nextFragment.append(tr);
+		
+		[...Array(4).keys()].forEach((col, y) => {
+			const td = document.createElement('td');
+			tr.append(td);
+		});
+	});
+	nextTable.append(nextFragment);
 }
 
 function drawView() {
@@ -222,8 +237,26 @@ function drawView() {
 	});
 }
 
+function drawNextBlock() {
+	nextTable.querySelectorAll('tr').forEach((row, i) => {
+		Array.from(row.children).forEach((col, j) => {
+			if (nextBlock.shape[0][i] && nextBlock.shape[0][i][j] > 0)
+				nextTable.querySelectorAll('tr')[i + 1].children[j].className = blocks[nextBlock.numCode - 1].color;
+			else if (i < 3)
+				nextTable.querySelectorAll('tr')[i + 1].children[j].className = '';
+		});
+	});
+}
+
 function createBlock() {
-	block = blocks[Math.floor(Math.random() * blocks.length)];
+	if (!block)
+		block = blocks[Math.floor(Math.random() * blocks.length)];
+	else
+		block = nextBlock;
+	
+	nextBlock = blocks[Math.floor(Math.random() * blocks.length)];
+	drawNextBlock();
+	
 	blockPosition = [0, 3];
 	let isGameOver = false;
 	
