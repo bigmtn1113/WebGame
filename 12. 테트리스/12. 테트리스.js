@@ -252,9 +252,24 @@ function createBlock() {
 	drawView();
 }
 
-init();
-createBlock();
-let interval = setInterval(dropBlock, 2000);
+function checkRows() {
+	const fullRows = [];
+	
+	tableData.forEach((row, i) => {
+		let cnt = 0;
+		row.forEach((col, j) => {
+			if (col > 0)
+				++cnt;
+		});
+		
+		if (cnt === 10)
+			fullRows.push(i);
+	});
+	
+	tableData = tableData.filter((row, i) => !fullRows.includes(i));
+	for (let i = 0; i < fullRows.length; ++i)
+		tableData.unshift([0, 0, 0, 0, 0, 0, 0, 0, 0, 0]);
+}
 
 function dropBlock() {
 	const validBlocks = [];
@@ -292,10 +307,15 @@ function dropBlock() {
 			tableData[block[0]][block[1]] *= 10;
 		});
 		
+		checkRows();
 		createBlock();
 		return false;
 	}
 }
+
+init();
+createBlock();
+let interval = setInterval(dropBlock, 2000);
 
 window.addEventListener('keydown', function(e) {	// 누르고 있어도 되는 경우
 	switch(e.code) {
