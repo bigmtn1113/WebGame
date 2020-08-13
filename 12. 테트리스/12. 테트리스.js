@@ -198,11 +198,11 @@ const isInvalidBlock = value => (value === undefined || value >= 10);
 function init() {
 	const fragment = document.createDocumentFragment();	// 바로 화면에 그리는 것보다 fragment를 만들어서 붙이는게 더 빠름.
 	
-	[...Array(20).keys()].forEach((row, x) => {
+	[...Array(20).keys()].forEach((row, i) => {
 		const tr = document.createElement('tr');
 		fragment.append(tr);
 		
-		[...Array(10).keys()].forEach((col, y) => {
+		[...Array(10).keys()].forEach((col, j) => {
 			const td = document.createElement('td');
 			tr.append(td);
 		});
@@ -214,11 +214,11 @@ function init() {
 	
 	const nextFragment = document.createDocumentFragment();
 	
-	[...Array(4).keys()].forEach((row, x) => {
+	[...Array(4).keys()].forEach((row, i) => {
 		const tr = document.createElement('tr');
 		nextFragment.append(tr);
 		
-		[...Array(4).keys()].forEach((col, y) => {
+		[...Array(4).keys()].forEach((col, j) => {
 			const td = document.createElement('td');
 			tr.append(td);
 		});
@@ -227,12 +227,12 @@ function init() {
 }
 
 function drawView() {
-	tableData.forEach((row, x) => {
-		row.forEach((col, y) => {
+	tableData.forEach((row, i) => {
+		row.forEach((col, j) => {
 			if (col > 0)
-				table.children[x].children[y].className = col >= 10 ? blocks[col / 10 - 1].color : blocks[col - 1].color;
+				table.children[i].children[j].className = col >= 10 ? blocks[col / 10 - 1].color : blocks[col - 1].color;
 			else
-				table.children[x].children[y].className = '';
+				table.children[i].children[j].className = '';
 		});
 	});
 }
@@ -260,9 +260,9 @@ function createBlock() {
 	blockPosition = [0, 3];
 	let isGameOver = false;
 	
-	block.shape[0].slice(0, 2).forEach((row, x) => {
-		row.forEach((col, y) => {
-			if (tableData[x][y + 3])
+	block.shape[0].slice(0, 2).forEach((row, i) => {
+		row.forEach((col, j) => {
+			if (tableData[i][j + 3])
 				isGameOver = true;
 		});
 	});
@@ -274,10 +274,10 @@ function createBlock() {
 		return;
 	}
 	
-	block.shape[0].forEach((row, x) => {
-		row.forEach((col, y) => {
+	block.shape[0].forEach((row, i) => {
+		row.forEach((col, j) => {
 			if (col)
-				tableData[x][y + 3] = block.numCode;
+				tableData[i][j + 3] = block.numCode;
 		});
 	});
 	
@@ -432,7 +432,6 @@ window.addEventListener('keydown', function(e) {	// 누르고 있어도 되는 �
 });
 
 window.addEventListener('keyup', function(e) {
-	console.log(e.code);
 	switch(e.code) {
 		case 'Space':
 			while (dropBlock()) {}
