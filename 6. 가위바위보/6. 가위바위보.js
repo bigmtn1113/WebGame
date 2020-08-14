@@ -24,6 +24,8 @@ function pcChoice(imgPosition) {
 
 var interval;
 function makeInterval() {
+	if (interval) clearInterval(interval);
+	
 	interval = setInterval(function () {	// setTimeout은 한번만 실행. setInterval은 반복 실행.
 		if (imgPosition === rsp.rock) imgPosition = rsp.scissor;
 		else if (imgPosition === rsp.scissor) imgPosition = rsp.paper;
@@ -44,9 +46,9 @@ document.querySelectorAll('.btn').forEach(function (btn) {	// btn이 여러개�
 		var myChoice = this.textContent;	// button 클릭시 해당 버튼의 textContent.
 		var scoreDifference = score[myChoice] - score[pcChoice(imgPosition)];
 		
-		if ([-1, 2].includes(scoreDifference)) result.textContent = myChoice + ' win!!!';	// 배열.includes(a) => a에 해당하는 값이 배열에 있는지 검사
-		else if (scoreDifference === 0) result.textContent = myChoice + ' draw';
-		else result.textContent = myChoice + ' lose...';
+		if ([-1, 2].includes(scoreDifference)) result.textContent = 'win!!!';	// 배열.includes(a) => a에 해당하는 값이 배열에 있는지 검사
+		else if (scoreDifference === 0) result.textContent = 'draw';
+		else result.textContent = 'lose...';
 		
 		document.body.append(result);
 	});
