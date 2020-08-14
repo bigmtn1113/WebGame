@@ -226,6 +226,43 @@ function init() {
 	nextTable.append(nextFragment);
 }
 
+function drawStopView() {
+	tableData.forEach((row, i) => {
+		row.forEach((col, j) => {
+			if (
+				([0, 2, 4].includes(i) && [2, 3, 4].includes(j)) ||
+				(i === 1 && j === 2) ||
+				(i === 3 && j === 4)
+			) table.children[i].children[j].className = 'red';
+			
+			else if (
+				(i === 5 && [5, 6, 7].includes(j)) ||
+				([6, 7, 8, 9].includes(i) && j === 6)
+			) table.children[i].children[j].className = 'orange';
+			
+			else if (
+				([10, 14].includes(i) && [2, 3, 4].includes(j)) ||
+				([11, 12, 13].includes(i) && [2, 4].includes(j))
+			) table.children[i].children[j].className = 'yellow';
+			
+			else if (
+				([15, 17].includes(i) && [5, 6, 7].includes(j)) ||
+				(i === 16 && [5, 7].includes(j)) ||
+				([18, 19].includes(i) && j === 5)
+			) table.children[i].children[j].className = 'blue';
+			
+			else
+				table.children[i].children[j].className = '';
+		});
+	});
+	
+	nextTable.querySelectorAll('tr').forEach((row, i) => {
+		Array.from(row.children).forEach((col, j) => {
+			col.className = '';
+		});
+	});
+}
+
 function drawView() {
 	tableData.forEach((row, i) => {
 		row.forEach((col, j) => {
@@ -365,12 +402,15 @@ let isStopped = false;
 document.querySelector('#stop').addEventListener('click', function() {
 	clearInterval(interval);
 	isStopped = true;
+	drawStopView();
 });
 document.querySelector('#start').addEventListener('click', function() {
 	if (interval)
 		clearInterval(interval);
 	interval = setInterval(dropBlock, 2000);
 	isStopped = false;
+	drawView();
+	drawNextBlock();
 });
 
 window.addEventListener('keydown', function(e) {	// 누르고 있어도 되는 경우
