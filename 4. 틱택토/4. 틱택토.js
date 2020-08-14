@@ -37,7 +37,7 @@ function initGame() {
 				cell.textContent = '';
 			});
 		});
-	}, 1000);
+	}, 2000);
 }
 
 var callback = function(event) {
