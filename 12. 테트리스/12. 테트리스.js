@@ -257,6 +257,7 @@ function createBlock() {
 	nextBlock = blocks[Math.floor(Math.random() * blocks.length)];
 	drawNextBlock();
 	
+	block.shapeIndex = 0;
 	blockPosition = [0, 3];
 	let isGameOver = false;
 	
