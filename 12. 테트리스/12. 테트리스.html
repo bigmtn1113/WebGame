@@ -46,18 +46,28 @@
 			td.red {
 				background-color: red;
 			}
-			div {
+			#score-div {
 				display: inline-block;
 				position: relative;
 				right: 80px;
 				bottom: 12px;
 			}
+			#stop, #start {
+				position: relative;
+				width: 50px;
+				height: 50px;
+				right: 70px;
+			}
 		</style>
 	</head>
 	<body>
-		<table id="table"></table>
-		<table id="next-table"></table>
-		<div>score: <span id="score">0</span></div>
+		<div id="container">
+			<table id="table"></table>
+			<table id="next-table"></table>
+			<div id="score-div">score: <span id="score">0</span></div>
+		</div>
+		<button id="stop">stop</button>
+		<button id="start">start</button>
 		<script src="12. 테트리스.js"></script>
 	</body>
 </html>

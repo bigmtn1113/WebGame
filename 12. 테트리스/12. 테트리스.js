@@ -360,7 +360,22 @@ init();
 createBlock();
 let interval = setInterval(dropBlock, 2000);
 
+let isStopped = false;
+
+document.querySelector('#stop').addEventListener('click', function() {
+	clearInterval(interval);
+	isStopped = true;
+});
+document.querySelector('#start').addEventListener('click', function() {
+	if (interval)
+		clearInterval(interval);
+	interval = setInterval(dropBlock, 2000);
+	isStopped = false;
+});
+
 window.addEventListener('keydown', function(e) {	// 누르고 있어도 되는 경우
+	if (isStopped) return;
+
 	switch(e.code) {
 		case 'ArrowDown':
 			dropBlock();
@@ -433,6 +448,8 @@ window.addEventListener('keydown', function(e) {	// 누르고 있어도 되는 �
 });
 
 window.addEventListener('keyup', function(e) {
+	if (isStopped) return;
+	
 	switch(e.code) {
 		case 'Space':
 			while (dropBlock()) {}
