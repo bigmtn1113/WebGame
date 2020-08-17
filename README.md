@@ -45,3 +45,13 @@
 > * 21 ~  30: 노란색 공  
 > * 31 ~  40: 파란색 공  
 > * 41 ~  45: 초록색 공  
+<br/>
+
+## 6. 가위바위보
+> ![가위바위보_승리](./result_image/가위바위보_승리.png)
+> ![가위바위보_비김](./result_image/가위바위보_비김.png)
+> ![가위바위보_패배](./result_image/가위바위보_패배.png)  
+> * 버튼 선택으로 가위바위보 진행  
+> * scissor -> rock: win  
+> * paper -> paper: draw  
+> * rock -> scissor: lose  
